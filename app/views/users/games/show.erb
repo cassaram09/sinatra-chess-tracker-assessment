@@ -1,6 +1,9 @@
-<%= @game.date %>
-<% @game.users.each do |user|%>
-  <%= user.name%>
-  <% end%>
+<%= @game.date  %></a> 
+  <%=  @user.wins.include?(@game.win) ? "You won!" : nil %>
+  <%=  @user.wins.include?(@game.loss) ? "You lost!" : nil %>
+  <%=  @user.draws.include?(@game.draw) ? "Draw" : nil %>
+  against: <% @game.users.each do |user| %> 
+    <%= user.name != @user.name ? user.name : nil %> 
+  <% end %>
 
- Outcome: <%= @game.outcome.name %>
+<a href="/users/<%= @user.slug %>/games/<%= @game.id %>/edit">Edit</a>
