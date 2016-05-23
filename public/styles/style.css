@@ -1,0 +1,12 @@
+<<<<<<< HEAD
+.draw {
+  display: none;
+}
+
+.win-lose {
+  display: block;
+=======
+#block {
+  display:none;
+>>>>>>> parent of 440d7a8... changed model and migrations so draws can belong to more than one user
+}
