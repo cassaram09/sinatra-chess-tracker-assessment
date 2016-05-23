@@ -6,19 +6,12 @@
     <br/>
     <br/>
   <p>
-<<<<<<< HEAD
   <input type="checkbox" id="toggle" name="draw" value="draw"/><label for="toggle">Draw?</label>
   </p>
 
   <div class="draw">
     <label>Against:</label> 
-=======
-
-  <input type="checkbox" id="toggle"/><label for="toggle">Show/Hide</label>
-<div id="block">
-  <label>Winner?:</label> 
->>>>>>> parent of 440d7a8... changed model and migrations so draws can belong to more than one user
-    <select name="players[][id]">
+    <select name="players[id]">
       <option disabled selected value> -- select Player -- </option>
       <% User.all.each do |user| %>
         <option value="<%= user.id %>"> <%= user.name %></option>

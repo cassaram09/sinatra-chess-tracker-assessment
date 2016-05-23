@@ -28,14 +28,23 @@ class GamesController < ApplicationController
     @user = Helpers.current_user(session)
     @game = Game.create(date: params[:date])
     if params[:draw]
-      @draw = Outcome.create(name: "draw", game_id: @game.id)
+      @draw = Draw.create(game_id: @game.id)
+      @game.draw = @draw
+      @draw.users << @user
+      @draw.users << User.find_by(id: params[:players][:id]) 
       @game.users << @user
-      @game.users << User.find_by(id: params[:players][0][:id]) 
-      @draw.save
+      @game.users << User.find_by(id: params[:players][:id]) 
+      @game.save
       redirect "/users/#{@user.slug}/games/#{@game.id}"
     else
-      @draw = Outcome.create(name: "draw", game_id: @game.id)
-    redirect "/users/#{@users.slug}"
+      winner = User.find_by(id: params[:winner][:id])
+      loser = User.find_by(id: params[:loser][:id])
+      @win = Win.create(game_id: @game.id, user_id: winner.id )
+      @loss = Loss.create(game_id: @game.id, user_id: loser.id )
+      @game.users << winner
+      @game.users << loser
+      @game.save
+    redirect "/users/#{@user.slug}"
     end
   end
 

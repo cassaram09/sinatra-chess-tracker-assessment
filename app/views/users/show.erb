@@ -14,7 +14,7 @@
 <% @user.games.reverse.each do |game| %>
   <p><a href="<%= @user.slug %>/games/<%= game.id %>"><%= game.date  %></a> 
   <%=  @user.wins.include?(game.win) ? "You won!" : nil %>
-  <%=  @user.wins.include?(game.loss) ? "You lost!" : nil %>
+  <%=  @user.losses.include?(game.loss) ? "You lost!" : nil %>
   <%=  @user.draws.include?(game.draw) ? "Draw" : nil %>
   against: <% game.users.each do |user| %> 
     <%= user.name != @user.name ? user.name : nil %> 
