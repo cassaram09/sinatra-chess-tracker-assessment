@@ -32,7 +32,6 @@ class ApplicationController < Sinatra::Base
 
   #Send login credentials to database
   post '/login' do
-    binding.pry
     if !params.has_value?("") #if any field is blank, throw an error and reload the page
       @user = User.find_by(email: params[:email])
       if @user && @user.authenticate(params[:password])
@@ -103,6 +102,8 @@ class ApplicationController < Sinatra::Base
     @user = Helpers.current_user(session)
     if Helpers.is_logged_in?(session) && @user.slug == params[:slug]
         @user = Helpers.current_user(session)
+        @recent_games = []
+        @user.games.reverse[0..2].each {|game| @recent_games << game }
         erb :'/users/show'
       else
       redirect "/"

@@ -1,13 +1,11 @@
 class GamesController < ApplicationController
-  configure do
-    set :views, "app/views"
-  end
 
+  
   get '/users/:slug/games' do
     @user = User.find_by_slug(params[:slug])
     @current = Helpers.current_user(session)
-    if @current.id = @user.id
-      erb :'/users/games/index'
+    if @current.id == @user.id
+      erb :'/users/index'
     else
       redirect "/users/#{@current.slug}"
     end

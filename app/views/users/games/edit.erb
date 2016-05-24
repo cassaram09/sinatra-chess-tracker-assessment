@@ -6,7 +6,7 @@
 
 <form method="POST" action="/users/:slug/games">
   <label for="date">Date</label>
-    <input type="text" name="date" id="datepicker" required>
+    <input type="text" name="date" id="datepicker" value="<%= @game.date %>" required>
     <br/>
     <br/>
   <p>

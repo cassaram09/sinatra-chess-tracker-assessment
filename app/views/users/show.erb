@@ -1,4 +1,4 @@
-<h1>User Dashboard</h1>
+<h1>Your Dashboard</h1>
 
 <% if flash.has?(:message) %>
   <p><%= flash[:message] %></p>
@@ -10,8 +10,10 @@
 <a href="<%= @user.slug %>/games/new">Add a game</a>
 </br>
 </br>
-<h2> You Recent Games </h2>
-<% @user.games.reverse.each do |game| %>
+<h2>Your Recent Games </h2>
+
+
+<% @recent_games.each do |game| %>
   <p><a href="<%= @user.slug %>/games/<%= game.id %>"><%= game.date  %></a> 
   <%=  @user.wins.include?(game.win) ? "You won!" : nil %>
   <%=  @user.losses.include?(game.loss) ? "You lost!" : nil %>
