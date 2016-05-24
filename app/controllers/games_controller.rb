@@ -22,38 +22,36 @@ class GamesController < ApplicationController
   end
 
   post '/users/:slug/games' do
+    binding.pry
     @user = Helpers.current_user(session)
     if params[:draw]
-      if !params[:players]
-        flash[:message] = "Please try again." 
-        redirect "/users/#{@user.slug}/games/new"
-      end
-      @game = Game.create(date: params[:date])
-      @draw = Draw.create(game_id: @game.id)
-      @game.draw = @draw
-      @draw.users << @user
-      @draw.users << User.find_by(id: params[:players][:id]) 
-      @game.users << @user
-      @game.users << User.find_by(id: params[:players][:id]) 
-      @game.save
+      #if !params[:players]
+      #  flash[:message] = "Please try again." 
+      #  redirect "/users/#{@user.slug}/games/new"
+     # end
+      @game = Game.create(date: params[:date]) #create the game
+      @game.draw = Draw.create(game_id: @game.id) #create draw and add to the game
+      @player2 = User.find_by(id: params[:players][:id]) #find the other player 
+      @game.draw.users << @user << @player2 #create association between draw and players
+      @game.users << @user << @player2 #create association between game and users
       redirect "/users/#{@user.slug}/games/#{@game.id}"
     else
-      @game = Game.create(date: params[:date])
-      if params[:winner] == nil || params[:loser] == nil
-        flash[:message] = "Please try again!" 
-        redirect "/users/#{@user.slug}/games/new"
-      end
-      winner = User.find_by(id: params[:winner][:id])
-      loser = User.find_by(id: params[:loser][:id])
-      if @user != winner && @user != loser || loser == winner
-        flash[:message] = "Please try again@" 
-        redirect "/users/#{@user.slug}/games/new"
-      end
-      @win = Win.create(game_id: @game.id, user_id: winner.id )
-      @loss = Loss.create(game_id: @game.id, user_id: loser.id )
-      @game.users << winner
-      @game.users << loser
-      @game.save
+      #if params[:winner] == nil || params[:loser] == nil
+      #  flash[:message] = "Please try again!" 
+      #  redirect "/users/#{@user.slug}/games/new"
+      #end
+      winner = User.find_by(id: params[:winner][:id]) #find the winner
+      loser = User.find_by(id: params[:loser][:id]) #find the loser
+      #if @user != winner && @user != loser || loser == winner
+      #  flash[:message] = "Please try again@" 
+      #  redirect "/users/#{@user.slug}/games/new"
+      #end
+      @game = Game.create(date: params[:date]) #create a new game
+      @game.win = Win.create(game_id: @game.id) #create the win and associate it to the game
+      @game.loss = Loss.create(game_id: @game.id) #create the loss and associate to the game
+      @game.users << winner << loser #create association between playerss and game
+      winner.wins << @game.win #add win to winner
+      loser.losses << @game.loss #add loss to loser
     redirect "/users/#{@user.slug}"
     end
   end
@@ -86,20 +84,18 @@ class GamesController < ApplicationController
     @game = Game.find_by(id: params[:id])
     @game.update(date: params[:date])
     if params[:draw]
-      if !params[:players]
-        flash[:message] = "Please try again." 
-        redirect "/users/#{@user.slug}/games/new"
-      end
-      #if draw is already nil
+      @player2 = User.find_by(id: params[:players][:id])
+      #if !params[:players]
+      #  flash[:message] = "Please try again." 
+      #  redirect "/users/#{@user.slug}/games/new"
+      #end
+      #if draw does not yet exist
       if @game.draw == nil
-        @game.user_ids.clear
-        @draw = Draw.create(game_id: @game.id)
-        @game.draw = @draw
-        @draw.users << @user
-        @draw.users << User.find_by(id: params[:players][:id]) 
-        @game.users << @user
-        @game.users << User.find_by(id: params[:players][:id]) 
-        @game.save
+        Win.delete(@game.win.id)
+        Loss.delete(@game.loss.id)
+        @game.draw = Draw.create(game_id: @game.id)
+        @game.draw.users << @user << @player2
+        @game.users << @user << @player2
         redirect "/users/#{@user.slug}/games/#{@game.id}"
       else #if we're changing the player
         @game.draw.users.clear
@@ -123,6 +119,7 @@ class GamesController < ApplicationController
         flash[:message] = "Please try again@" 
         redirect "/users/#{@user.slug}/games/new"
       end
+      #problem area
       @game.users.clear
       @game.user_ids.clear
       @win = Win.find_or_create_by(game_id: @game.id, user_id: winner.id )
