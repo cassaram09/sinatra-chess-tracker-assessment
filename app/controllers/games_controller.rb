@@ -48,11 +48,12 @@ class GamesController < ApplicationController
       #  redirect "/users/#{@user.slug}/games/new"
       #end
       @game = Game.create(date: params[:date]) #create a new game
-      @game.win = Win.create(game_id: @game.id) #create the win and associate it to the game
-      @game.loss = Loss.create(game_id: @game.id) #create the loss and associate to the game
-      @game.users << winner << loser #create association between playerss and game
-      winner.wins << @game.win #add win to winner
-      loser.losses << @game.loss #add loss to loser
+      GamesUser.create(game_id: @game.id, user_id: winner.id)
+      GamesUser.create(game_id: @game.id, user_id: loser.id)
+      @game.win = Win.create
+      @game.loss = Loss.create
+      winner.wins << @game.win
+      loser.losses << @game.loss
     redirect "/users/#{@user.slug}"
     end
   end
