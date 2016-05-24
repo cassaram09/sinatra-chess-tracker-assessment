@@ -4,7 +4,8 @@
   <p><%= flash[:message] %></p>
 <% end %>
 
-<form method="POST" action="/users/:slug/games">
+<form method="POST" action="/users/<%= @user.slug %>/games/<%= @game.id %>">
+  <input type="hidden" name="_method" value="patch">
   <label for="date">Date</label>
     <input type="text" name="date" id="datepicker" value="<%= @game.date %>" required>
     <br/>
