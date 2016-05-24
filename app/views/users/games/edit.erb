@@ -3,3 +3,63 @@
 <% if flash.has?(:message) %>
   <p><%= flash[:message] %></p>
 <% end %>
+
+<form method="POST" action="/users/:slug/games">
+  <label for="date">Date</label>
+    <input type="text" name="date" id="datepicker" required>
+    <br/>
+    <br/>
+  <p>
+  <input type="checkbox" id="toggle" name="draw" value="draw" <%='checked' if @game.draw %>/><label for="toggle">Draw?</label>
+  </p>
+
+  <div class="draw" <%= 'style="display: block"' if @game.draw %>>
+    <label>Against:</label> 
+    <select name="players[id]">
+      <option disabled selected value> -- select Player -- </option>
+      <% User.all.each do |user| %>
+              <% if user == @user %>
+               <% next %>
+              <% end %>
+        <option value="<%= user.id %>" 
+        <% if @game.draw != nil %>
+          <%= 'selected' if @game.draw.users.each {|x| x.name == user.name} %>
+        <% end %> > <%= user.name%>
+         </option>
+      <% end %>
+    </select>
+  </div>
+
+  <div class="win-lose" <%= 'style="display: none"' if @game.draw %> >
+  <label>Winner:</label> 
+    <select name="winner[id]">
+      <option disabled selected value> -- select Player -- </option>
+      <% User.all.each do |user| %>
+        <option value="<%= user.id %>" 
+        <% if @game.win != nil %>
+          <%= 'selected' if @game.win.user_id == user.id %> 
+        <% end %> >
+        <%= user.name%>
+         </option>
+      <% end %>
+    </select>
+    <br/>
+    <br/>
+    <label>Loser:</label> 
+    <select name="loser[id]">
+      <option disabled selected value> -- select Player -- </option>
+      <% User.all.each do |user| %>
+        <option value="<%= user.id %>" 
+        <% if @game.win != nil %>
+          <%= 'selected' if @game.loss.user_id == user.id %> 
+        <% end %> >
+        <%= user.name%>
+         </option>
+      <% end %>
+    </select>
+  
+  </div>
+    <br/>
+    <input type="submit" value="Create" id="create">
+</form>
+

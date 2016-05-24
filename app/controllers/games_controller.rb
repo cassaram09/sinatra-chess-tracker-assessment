@@ -43,13 +43,13 @@ class GamesController < ApplicationController
     else
       @game = Game.create(date: params[:date])
       if params[:winner] == nil || params[:loser] == nil
-        flash[:message] = "Please try again." 
+        flash[:message] = "Please try again!" 
         redirect "/users/#{@user.slug}/games/new"
       end
       winner = User.find_by(id: params[:winner][:id])
       loser = User.find_by(id: params[:loser][:id])
-      if @user != winner || @user != loser || loser == winner
-        flash[:message] = "Please try again." 
+      if @user != winner && @user != loser || loser == winner
+        flash[:message] = "Please try again@" 
         redirect "/users/#{@user.slug}/games/new"
       end
       @win = Win.create(game_id: @game.id, user_id: winner.id )
