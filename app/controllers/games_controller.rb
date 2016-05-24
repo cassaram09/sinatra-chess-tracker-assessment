@@ -31,9 +31,10 @@ class GamesController < ApplicationController
      # end
       @game = Game.create(date: params[:date]) #create the game
       @game.draw = Draw.create(game_id: @game.id) #create draw and add to the game
-      @player2 = User.find_by(id: params[:players][:id]) #find the other player 
-      @game.draw.users << @user << @player2 #create association between draw and players
-      @game.users << @user << @player2 #create association between game and users
+      GamesUser.create(game_id: @game.id, user_id: @user.id)
+      GamesUser.create(game_id: @game.id, user_id: User.find_by(id: params[:players][:id]).id)
+      DrawsUser.create(draw_id: @game.draw.id, user_id: @user.id)
+      DrawsUser.create(draw_id: @game.draw.id, user_id: User.find_by(id: params[:players][:id]).id)
       redirect "/users/#{@user.slug}/games/#{@game.id}"
     else
       #if params[:winner] == nil || params[:loser] == nil

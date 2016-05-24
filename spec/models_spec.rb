@@ -50,7 +50,7 @@ describe "Models" do
     expect(@kelvin.losses).to include(@game.loss)
   end
 
-  it "allows you to create associations between games and users, with wins and losses" do
+  it "allows you to create associations between games and users, with draws" do
     GamesUser.create(game_id: @game.id, user_id: @matt.id)
     GamesUser.create(game_id: @game.id, user_id: @kelvin.id)
     @game.draw = Draw.create
