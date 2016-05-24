@@ -2,8 +2,12 @@ class User < ActiveRecord::Base
 
   has_secure_password
 
-  has_and_belongs_to_many :games
-  has_and_belongs_to_many :draws
+  has_many :games_users
+  has_many :games, through: :games_users, dependent: :destroy
+
+  has_many :draws_users
+  has_many :draws, through: :draws_users, dependent: :destroy
+  
   has_many :wins
   has_many :losses
 

@@ -1,6 +1,8 @@
 class Draw < ActiveRecord::Base
 
-  has_and_belongs_to_many :users
-  belongs_to :game
+  has_many :draws_users
+  has_many :users, through: :draws_users, dependent: :destroy
+  
+  belongs_to :game, dependent: :destroy
 
 end

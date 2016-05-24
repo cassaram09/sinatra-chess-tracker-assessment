@@ -99,11 +99,9 @@ class GamesController < ApplicationController
         redirect "/users/#{@user.slug}/games/#{@game.id}"
       else #if we're changing the player
         @game.draw.users.clear
-        @game.users.clear
-        @game.draw.users << @user
-        @game.draw.users << User.find_by(id: params[:players][:id]) 
-        @game.users << @user
-        @game.users << User.find_by(id: params[:players][:id]) 
+        @game.users.clear 
+        @game.draw.users << @user << @player2
+        @game.users << @user<< @player2
         @game.save
         @game.draw.save
         redirect "/users/#{@user.slug}/games/#{@game.id}"
